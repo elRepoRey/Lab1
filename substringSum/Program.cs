@@ -12,15 +12,7 @@ class Program
             inputStr = "29535123p48723487597645723645";
         }
 
-        try
-        {
-            SumSubStrings(inputStr!);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.ToString());
-        }
-
+        SumSubStrings(inputStr!);
     }
 
     static void SumSubStrings(string inputStr)
@@ -29,50 +21,58 @@ class Program
 
         for (int i = 0; i < inputStr.Length - 1; i++) // Hämtar den första tecknet
         {
-            for (int j = i + 1; j < inputStr.Length; j++) // Hämtar ett andra tecken
+
+            /* Boolean för att kontrollera om ett matchande tecken har hittats, och avsluta loopen om det stämmer.
+            * På detta sätt undviker vi att bygga upp en delsträng som har ett mellantecken som matchar det första tecknet.
+            */
+            bool firstMatchFound = false;
+
+            // Hämtar ett andra tecken om firstMatchFound är falskt
+            for (int j = i + 1; j < inputStr.Length && !firstMatchFound; j++) 
             {
-                if (inputStr[i] == inputStr[j]) // jämför dem
+                if (inputStr[i] == inputStr[j]) // jämför tecknen
                 {
-                    bool isValid = true; // Boolean för att kontrollera giltigheten av delsträngen
-                    long subInt = 0;
+                    bool isValid = true; // Boolean för att kontrollera att tecknen är siffror
+                    long subStrLong = 0; // Long för att lagra delsträngens heltalsvärde
+
 
                     for (int k = i; isValid && k <= j; k++)
                     {
-                        if (!char.IsDigit(inputStr[k])) // Ogiltigförklara delsträngen om något tecken inte är en siffra
+                        // Ogiltigförklara icke-siffror
+                        if (!char.IsDigit(inputStr[k]))
                         {
                             isValid = false;
                         }
 
-                        /* För att säkerställa att endast den första och sista karaktären i delsträngen är densamma,
-                        * kontrollerar detta if-uttryck varje karaktär i delsträngen.
-                        * Den ogiltigförklarar de delsträngar där någon mellanliggande karaktär matchar startkaraktären. 
-                        */
-                        if (k != i && k != j && inputStr[k] == inputStr[i])
+                        // Här byggs delsträngens värde genom att lägga till en siffras värde i taget och konvertera det till en long.
+                        if (isValid)
                         {
-                            isValid = false;
-                        }
-
-                        
-                        if (isValid) // Beräkna heltalsvärdet för delsträngen
-                        {
-                            subInt = subInt * 10 + (inputStr[k] - '0');
+                            subStrLong = subStrLong * 10 + (inputStr[k] - '0');
                         }
                     }
 
+                    /* Om delsträngen är giltig, sammanfoga den med totalen, färga den och sätt firstMatchFound
+                     till true för att avsluta den firsta inre loopen,
+                    */
                     if (isValid)
                     {
-                        total += subInt;
-                        HighlightSubstring(inputStr, i, j);
+                        firstMatchFound = true;
+                        total += subStrLong;
+                        ColorizeSubstring(inputStr, i, j);
                     }
                 }
+
+
             }
         }
 
+        // Skriv ut totalen
         string Total = total.ToString();
-        HighlightSubstring($"Total = {Total}", 0, $"Total = {Total}".Length-1);
+        ColorizeSubstring($"Total = {Total}", 0, $"Total = {Total}".Length-1);
+
     }
 
-    static void HighlightSubstring(string inputStr, int start, int end)
+    static void ColorizeSubstring(string inputStr, int start, int end)
     {
         Console.ForegroundColor = ConsoleColor.White;
         for (int i = 0; i < start; i++)
@@ -80,7 +80,7 @@ class Program
             Console.Write(inputStr[i]);
         }
 
-        Console.ForegroundColor = ConsoleColor.Green;
+        Console.ForegroundColor = ConsoleColor.Red;
         for (int i = start; i <= end; i++)
         {
             Console.Write(inputStr[i]);
