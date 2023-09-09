@@ -22,13 +22,13 @@ class Program
         for (int i = 0; i < inputStr.Length - 1; i++) // Hämtar den första tecknet
         {
 
-            /* Boolean för att kontrollera om ett matchande tecken har hittats, och avsluta loopen om det stämmer.
+            /* Boolean för att kontrollera om ett matchande tecken har hittats.
             * På detta sätt undviker vi att bygga upp en delsträng som har ett mellantecken som matchar det första tecknet.
             */
             bool firstMatchFound = false;
 
             // Hämtar ett andra tecken om firstMatchFound är falskt
-            for (int j = i + 1; j < inputStr.Length && !firstMatchFound; j++) 
+            for (int j = i + 1; j < inputStr.Length && !firstMatchFound; j++)
             {
                 if (inputStr[i] == inputStr[j]) // jämför tecknen
                 {
@@ -68,7 +68,7 @@ class Program
 
         // Skriv ut totalen
         string Total = total.ToString();
-        ColorizeSubstring($"Total = {Total}", 0, $"Total = {Total}".Length-1);
+        ColorizeSubstring($"Total = {Total}", 0, $"Total = {Total}".Length - 1);
 
     }
 
